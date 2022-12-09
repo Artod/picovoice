@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        /* Styles for the 5-star widget */
+        .star-rating {
+            display: block;
+            font-size: 0;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+        .star-rating__star {
+            color: #CCC;
+            font-size: 1.5rem;
+            padding: 0 0.25rem;
+        }
+        .star-rating__star--hover {
+            color: #EEE;
+        }
+        .star-rating__star--selected {
+            color: black;
+        }
+    </style>
+</head>
+<body>
+    Product A
+    <!-- 5-star widget for a product with UUID "ABC123" -->
+    <div class="star-rating" data-rating="0" data-product-id="ABC123">
+        <span class="star-rating__star">★</span>
+        <span class="star-rating__star">★</span>
+        <span class="star-rating__star">★</span>
+        <span class="star-rating__star">★</span>
+        <span class="star-rating__star">★</span>
+    </div>
+
+    <br>
+
+    Product B
+    <!-- 5-star widget for a product with UUID "XYZ123" -->
+    <div class="star-rating" data-rating="0" data-product-id="XYZ123">
+        <span class="star-rating__star">★</span>
+        <span class="star-rating__star">★</span>
+        <span class="star-rating__star">★</span>
+        <span class="star-rating__star">★</span>
+        <span class="star-rating__star">★</span>
+    </div>
+
+    <script>
+        // Get all star-rating elements
+        const ratings = document.querySelectorAll('.star-rating');
+
+        // Add event listeners for hover and click events for each star-rating element
+        ratings.forEach(rating => {
+            const stars = rating.querySelectorAll('.star-rating__star');
+            stars.forEach((star, index) => {
+                // Handle hover event
+                star.addEventListener('mouseover', () => {
+                    stars.forEach((star, starIndex) => {
+                        if (starIndex <= index) {
+                            star.classList.add('star-rating__star--hover');
+                        }
+                    });
+                });
+
+                // Handle mouseout event
+                star.addEventListener('mouseout', () => {
+                    stars.forEach(star => {
+                        star.classList.remove('star-rating__star--hover');
+                    });
+                });
+
+                // Handle click event
+                star.addEventListener('click', () => {
+                    // Set the selected rating for the widget
+                    rating.setAttribute('data-rating', index + 1);
+
+                    // Remove hover styles from all stars
+                    stars.forEach(star => {
+                        star.classList.remove('star-rating__star--selected');
+                    });
+
+                    // Add selected styles to selected stars
+                    stars.forEach((star, starIndex) => {
+                        if (starIndex <= index) {
+                            star.classList.add('star-rating__star--selected');
+                        }
+                    });
+
+                    // Send the rating to the server
+                    const productId = rating.getAttribute('data-product-id');
+                    const ratingValue = rating.getAttribute('data-rating');
+                    sendRatingToServer(productId, ratingValue);
+                });
+            });
+        });
+
+        // Function to send the rating to the server
+        function sendRatingToServer(productId, rating) {
+            // This function would send an AJAX request to the server to record the product rating
+            // without refreshing the page. In this implementation, we just print a message to
+            // the console to show that the rating has been sent to the server.
+            console.log(`Sending rating of ${rating} for product with UUID ${productId} to server...`);
+        }
+    </script>
+
+</body>
+</html>
